@@ -1,0 +1,28 @@
+{
+  "name": "apiproyecto",
+  "version": "1.0.0",
+  "description": "Api de usuarios",
+  "main": "index.js",
+  "scripts": {
+    "server": "npx babel-node src/index.js",
+    "start": "nodemon --exec npm run server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.3",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "kill-port": "^1.6.1",
+    "nodemon": "^2.0.12"
+  }
+}
