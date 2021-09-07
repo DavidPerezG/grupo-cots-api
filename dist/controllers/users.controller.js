@@ -13,6 +13,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _Users = _interopRequireDefault(require("../models/Users.model"));
 
+var _Role = _interopRequireDefault(require("../models/Role.model"));
+
 //Encuentra todos los usuarios registrados
 var findAllUsers = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
@@ -107,13 +109,16 @@ exports.findOneUser = findOneUser;
 
 var createUser = /*#__PURE__*/function () {
   var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res) {
-    var newUser, userSaved;
+    var _req$body, name, email, password, roles, newUser, foundRoles, role, savedUser;
+
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            if (!(!req.body.name || !req.body.email || !req.body.password)) {
-              _context3.next = 2;
+            _req$body = req.body, name = _req$body.name, email = _req$body.email, password = _req$body.password, roles = _req$body.roles;
+
+            if (!(!name || !email || !password)) {
+              _context3.next = 3;
               break;
             }
 
@@ -121,31 +126,76 @@ var createUser = /*#__PURE__*/function () {
               message: 'User must have a name, email and password'
             }));
 
-          case 2:
-            _context3.prev = 2;
-            newUser = new _Users["default"](req.body);
-            _context3.next = 6;
-            return newUser.save();
+          case 3:
+            _context3.prev = 3;
+            _context3.t0 = _Users["default"];
+            _context3.t1 = name;
+            _context3.t2 = email;
+            _context3.next = 9;
+            return _Users["default"].encryptPassword(password);
 
-          case 6:
-            userSaved = _context3.sent;
-            res.json(userSaved);
-            _context3.next = 13;
-            break;
+          case 9:
+            _context3.t3 = _context3.sent;
+            _context3.t4 = {
+              name: _context3.t1,
+              email: _context3.t2,
+              password: _context3.t3
+            };
+            newUser = new _context3.t0(_context3.t4);
 
-          case 10:
-            _context3.prev = 10;
-            _context3.t0 = _context3["catch"](2);
-            res.status(500).json({
-              message: 'Error creating user'
+            if (!roles) {
+              _context3.next = 19;
+              break;
+            }
+
+            _context3.next = 15;
+            return _Role["default"].find({
+              name: {
+                $in: roles
+              }
             });
 
-          case 13:
+          case 15:
+            foundRoles = _context3.sent;
+            newUser.roles = foundRoles.map(function (role) {
+              return role._id;
+            });
+            _context3.next = 23;
+            break;
+
+          case 19:
+            _context3.next = 21;
+            return _Role["default"].findOne({
+              name: "user"
+            });
+
+          case 21:
+            role = _context3.sent;
+            newUser.roles = [role._id];
+
+          case 23:
+            _context3.next = 25;
+            return newUser.save();
+
+          case 25:
+            savedUser = _context3.sent;
+            res.status(200).json({
+              message: "User created"
+            });
+            _context3.next = 32;
+            break;
+
+          case 29:
+            _context3.prev = 29;
+            _context3.t5 = _context3["catch"](3);
+            console.error(_context3.t5);
+
+          case 32:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[2, 10]]);
+    }, _callee3, null, [[3, 29]]);
   }));
 
   return function createUser(_x5, _x6) {

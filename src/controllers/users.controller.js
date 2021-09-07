@@ -1,4 +1,5 @@
 import UsersModel from "../models/Users.model";
+import RoleModel from "../models/Role.model";
 
 //Encuentra todos los usuarios registrados
 export const findAllUsers = async (req, res) => {
@@ -26,28 +27,41 @@ export const findOneUser = async (req, res) => {
         res.status(500).json({
             message: error.message || `Error retrieving User with id: ${req.params.id}`
         })
-        
     }
 }
 
 //Registra a un nuevo usuario
 export const createUser = async (req, res) => {
+    const { name, email ,password, roles } = req.body
     
-    if (!req.body.name || !req.body.email || !req.body.password){
+    if (!name || !email || !password){
         return res.status(400).send({
             message: 'User must have a name, email and password'
         })
     }
 
     try {
-        const newUser = new UsersModel(req.body)
-        const userSaved = await newUser.save();
-        res.json(userSaved)    
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error creating user'
+        const newUser = new UsersModel({
+            name, 
+            email,
+            password: await UsersModel.encryptPassword(password)
         })
-        
+    
+        if (roles) {
+            const foundRoles = await RoleModel.find({name: {$in: roles}})
+            newUser.roles = foundRoles.map(role => role._id)
+        } else {
+            const role = await RoleModel.findOne({name: "user"})
+            newUser.roles = [role._id];
+        }
+    
+        const savedUser = await newUser.save() 
+
+        res.status(200).json({message: "User created"})
+
+
+    } catch (error) {
+        console.error(error)
     }
 }
 

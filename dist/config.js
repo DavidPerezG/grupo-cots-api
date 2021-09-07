@@ -9,6 +9,7 @@ var _dotenv = require("dotenv");
 
 (0, _dotenv.config)();
 var _default = {
-  mongodbURL: process.env.MONGODB_URL || 'mongodb://localhost/tasksdb'
+  mongodbURL: process.env.MONGODB_URL || 'mongodb://localhost/tasksdb',
+  SECRET: "user-account"
 };
 exports["default"] = _default;
