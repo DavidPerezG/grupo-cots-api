@@ -18,7 +18,10 @@ export const signIn = async (req, res) => {
             expiresIn: 84600 //24 horas
         })
 
-        res.json({token: token})
+        res.json({
+            token: token,
+            iduser: userFound._id     
+        })
     } catch (error) {
         res.status(500).json({
             message: 'Error signin in'
@@ -47,7 +50,7 @@ export const signUp = async (req, res) => {
             const foundRoles = await RoleModel.find({name: {$in: roles}})
             newUser.roles = foundRoles.map(role => role._id)
         } else {
-            const role = await RoleModel.findOne({name: "user"})
+            const role = await RoleModel.findOne({name: "patient"})
             newUser.roles = [role._id];
         }
 

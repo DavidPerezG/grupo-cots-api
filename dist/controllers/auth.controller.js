@@ -69,7 +69,8 @@ var signIn = /*#__PURE__*/function () {
 
             });
             res.json({
-              token: token
+              token: token,
+              iduser: userFound._id
             });
             _context.next = 18;
             break;
@@ -155,7 +156,7 @@ var signUp = /*#__PURE__*/function () {
           case 19:
             _context2.next = 21;
             return _Role["default"].findOne({
-              name: "user"
+              name: "patient"
             });
 
           case 21:

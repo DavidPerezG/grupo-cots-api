@@ -6,7 +6,7 @@
   "scripts": {
     "server": "npx babel-node src/index.js",
     "dev": "nodemon --exec npm run server",
-    "build": "babel src --out-dir dist", 
+    "build": "babel src --out-dir dist",
     "start": "node dist/index.js"
   },
   "author": "David Perez Garcia",
@@ -21,6 +21,7 @@
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.3",
+    "mongoose-paginate-v2": "^1.4.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

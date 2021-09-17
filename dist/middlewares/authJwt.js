@@ -27,7 +27,7 @@ var verifyToken = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
-            token = req.headers["x-access-token"];
+            token = req.headers["x-access-token"].split(' ')[1];
 
             if (token) {
               _context.next = 4;
@@ -39,18 +39,28 @@ var verifyToken = /*#__PURE__*/function () {
             }));
 
           case 4:
+            console.log(token);
+
+            if (!(token === 'null')) {
+              _context.next = 7;
+              break;
+            }
+
+            return _context.abrupt("return", res.status(401).send('Unauthorized Request'));
+
+          case 7:
             decoded = _jsonwebtoken["default"].verify(token, _config["default"].SECRET);
             req.userId = decoded.id;
-            _context.next = 8;
+            _context.next = 11;
             return _Users["default"].findById(req.userId, {
               password: 0
             });
 
-          case 8:
+          case 11:
             user = _context.sent;
 
             if (user) {
-              _context.next = 11;
+              _context.next = 14;
               break;
             }
 
@@ -58,24 +68,25 @@ var verifyToken = /*#__PURE__*/function () {
               message: "No user found"
             }));
 
-          case 11:
+          case 14:
             next();
-            _context.next = 17;
+            _context.next = 21;
             break;
 
-          case 14:
-            _context.prev = 14;
+          case 17:
+            _context.prev = 17;
             _context.t0 = _context["catch"](0);
+            console.log(_context.t0);
             return _context.abrupt("return", res.status(401).json({
               message: "Unauthorized"
             }));
 
-          case 17:
+          case 21:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 14]]);
+    }, _callee, null, [[0, 17]]);
   }));
 
   return function verifyToken(_x, _x2, _x3) {

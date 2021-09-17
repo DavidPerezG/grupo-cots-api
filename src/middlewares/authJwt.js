@@ -5,9 +5,14 @@ import RoleModel from '../models/Role.model'
 
 export const verifyToken = async (req, res, next) => {
     try {
-        const token = req.headers["x-access-token"];
+        const token = req.headers["x-access-token"].split(' ')[1];
 
         if (!token) return res.status(403).json({message: "No token provided"})
+
+        console.log(token)
+        if(token === 'null') {
+            return res.status(401).send('Unauthorized Request');
+        }
 
         const decoded = jwt.verify(token, config.SECRET)
         req.userId = decoded.id;
@@ -18,7 +23,9 @@ export const verifyToken = async (req, res, next) => {
         next()
 
     } catch (error) {
+        console.log(error)
         return res.status(401).json({message:"Unauthorized"})
+
         
     }
 }
@@ -37,7 +44,7 @@ export const verifyDoctor = async (req, res, next) => {
     return res.status(403).json({message: "Request Doctor role"});
 
 
-    //pregunta por ut mm
+
 
 }
 

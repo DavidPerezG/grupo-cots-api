@@ -15,6 +15,8 @@ var _mongoose = require("mongoose");
 
 var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
 
+var _mongoosePaginateV = _interopRequireDefault(require("mongoose-paginate-v2"));
+
 var userSchema = new _mongoose.Schema({
   name: {
     type: String,
@@ -95,6 +97,8 @@ userSchema.statics.comparePassword = /*#__PURE__*/function () {
     return _ref2.apply(this, arguments);
   };
 }();
+
+userSchema.plugin(_mongoosePaginateV["default"]);
 
 var _default = (0, _mongoose.model)('User', userSchema);
 

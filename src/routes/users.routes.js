@@ -6,7 +6,13 @@ const router = Router()
 
 
 router.get('/', usersController.findAllUsers)
+
+router.get('/admins', usersController.findAllAdmins)
+router.get('/doctors', usersController.findAllDoctors)
+router.get('/patients', usersController.findAllPatients)
+
 router.get('/:id', usersController.findOneUser)
+
 router.post('/', [
     authJwt.verifyToken, 
     authJwt.verifyAdmin, 

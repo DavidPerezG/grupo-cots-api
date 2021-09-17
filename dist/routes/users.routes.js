@@ -19,6 +19,9 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 var router = (0, _express.Router)();
 router.get('/', usersController.findAllUsers);
+router.get('/admins', usersController.findAllAdmins);
+router.get('/doctors', usersController.findAllDoctors);
+router.get('/patients', usersController.findAllPatients);
 router.get('/:id', usersController.findOneUser);
 router.post('/', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.verifyAdmin, _middlewares.verifySignup.checkRolesExisted, _middlewares.verifySignup.checkDuplicateUsernameOrEmail], usersController.createUser);
 router.put('/:id', [_middlewares.authJwt.verifyToken], usersController.updateUser);
