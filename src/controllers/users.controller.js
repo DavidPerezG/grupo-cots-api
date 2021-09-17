@@ -7,12 +7,20 @@ import { verifyAdmin } from "../middlewares/authJwt";
 //Encuentra todos los usuarios registrados
 export const findAllUsers = async (req, res) => {
     try {
+        const users = await UsersModel.find()
+        var params = new URLSearchParams(req.query);
+        var valueP = params.get('name');
+        const { size, page } =  req.query;
+        if(valueP != null){
+            valueP = valueP.toLowerCase()
 
-        const { size, page } =  req.query
-        console.log(size, page)
 
-        if (size === undefined && page === undefined){
-            const users = await UsersModel.find()
+            var usersfiltered =  users.filter(user => user = user.name.toLowerCase().includes(valueP));
+            res.json(usersfiltered) 
+
+        }
+        else if (size === undefined && page === undefined){
+            
             res.json(users)
             
         }
@@ -27,6 +35,7 @@ export const findAllUsers = async (req, res) => {
 
         
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             message: 'Error retrieving users'
         })
