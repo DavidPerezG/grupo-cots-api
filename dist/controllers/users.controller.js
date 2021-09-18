@@ -24,59 +24,75 @@ var _authJwt = require("../middlewares/authJwt");
 //Encuentra todos los usuarios registrados
 var findAllUsers = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
-    var _req$query, size, page, users, _getPagination, limit, offset, _users;
+    var users, params, valueP, _req$query, size, page, usersfiltered, _getPagination, limit, offset, _users;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
-            _req$query = req.query, size = _req$query.size, page = _req$query.page;
-            console.log(size, page);
+            _context.next = 3;
+            return _Users["default"].find();
 
-            if (!(size === undefined && page === undefined)) {
-              _context.next = 10;
+          case 3:
+            users = _context.sent;
+            params = new URLSearchParams(req.query);
+            valueP = params.get('name');
+            _req$query = req.query, size = _req$query.size, page = _req$query.page;
+
+            if (!(valueP != null)) {
+              _context.next = 13;
               break;
             }
 
-            _context.next = 6;
-            return _Users["default"].find();
-
-          case 6:
-            users = _context.sent;
-            res.json(users);
-            _context.next = 15;
+            valueP = valueP.toLowerCase();
+            usersfiltered = users.filter(function (user) {
+              return user = user.name.toLowerCase().includes(valueP);
+            });
+            res.json(usersfiltered);
+            _context.next = 22;
             break;
 
-          case 10:
+          case 13:
+            if (!(size === undefined && page === undefined)) {
+              _context.next = 17;
+              break;
+            }
+
+            res.json(users);
+            _context.next = 22;
+            break;
+
+          case 17:
             _getPagination = (0, _getPagination5.getPagination)(page, size), limit = _getPagination.limit, offset = _getPagination.offset;
-            _context.next = 13;
+            _context.next = 20;
             return _Users["default"].paginate({}, {
               offset: offset,
               limit: limit
             });
 
-          case 13:
+          case 20:
             _users = _context.sent;
-            res.json(_users);
+            res.json(_users.docs);
 
-          case 15:
-            _context.next = 20;
+          case 22:
+            _context.next = 28;
             break;
 
-          case 17:
-            _context.prev = 17;
+          case 24:
+            _context.prev = 24;
             _context.t0 = _context["catch"](0);
+            console.log(_context.t0);
             res.status(500).json({
               message: 'Error retrieving users'
             });
 
-          case 20:
+          case 28:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 17]]);
+    }, _callee, null, [[0, 24]]);
   }));
 
   return function findAllUsers(_x, _x2) {

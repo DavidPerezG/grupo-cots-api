@@ -30,7 +30,7 @@ export const findAllUsers = async (req, res) => {
 
             const users = await UsersModel.paginate({}, { offset, limit });
             
-            res.json(users)
+            res.json(users.docs)
         }
 
         
