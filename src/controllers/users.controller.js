@@ -136,7 +136,8 @@ export const findOneUser = async (req, res) => {
 
 //Registra a un nuevo usuario
 export const createUser = async (req, res) => {
-    const { name, email ,password, roles } = req.body
+    console.log(req.file)
+    const { name, email ,password, image ,roles } = req.body
     
     if (!name || !email || !password){
         return res.status(400).send({
@@ -148,7 +149,8 @@ export const createUser = async (req, res) => {
         const newUser = new UsersModel({
             name, 
             email,
-            password: await UsersModel.encryptPassword(password)
+            password: await UsersModel.encryptPassword(password),
+            image
         })
     
         if (roles) {

@@ -20,6 +20,9 @@ const userSchema = new Schema(
             required: true,
 
         },
+        image: {
+            type: String
+        },
         roles: [{
             ref: "Role",
             type: Schema.Types.ObjectId,
