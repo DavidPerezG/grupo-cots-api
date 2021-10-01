@@ -17,6 +17,12 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _package = _interopRequireDefault(require("../package.json"));
 
+var _cloudinary = _interopRequireDefault(require("cloudinary"));
+
+var _multer = _interopRequireDefault(require("multer"));
+
+var _path = _interopRequireDefault(require("path"));
+
 var _users = _interopRequireDefault(require("./routes/users.routes"));
 
 var _doctors = _interopRequireDefault(require("./routes/doctors.routes"));
@@ -33,14 +39,31 @@ var app = (0, _express["default"])();
 (0, _initialSetup.createRoles)(); //Settings
 
 app.set('pkg', _package["default"]);
-app.set('port', process.env.PORT || 3000); //Middleware
+app.set('port', process.env.PORT || 3000);
+
+_cloudinary["default"].config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+var storage = _multer["default"].diskStorage({
+  destination: _path["default"].join(__dirname, 'public/upload'),
+  filename: function filename(req, file, cb) {
+    cb(null, Date.now() + file.mimetype.split('/')[1]);
+  }
+}); //Middleware
+
 
 app.use((0, _cors["default"])());
 app.use((0, _morgan["default"])('dev'));
 app.use(_express["default"].json());
 app.use(_express["default"].urlencoded({
   extended: false
-})); //Routes
+}));
+app.use((0, _multer["default"])({
+  storage: storage
+}).single('file')); //Routes
 
 app.get('/', function (req, res) {
   res.json({

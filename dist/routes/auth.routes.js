@@ -19,6 +19,6 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 var router = (0, _express.Router)();
 router.post('/signin', authController.signIn);
-router.post('/signup', [_middlewares.verifySignup.checkDuplicateUsernameOrEmail, _middlewares.verifySignup.checkRolesExisted], authController.signUp);
+router.post('/signup', [_middlewares.verifySignup.checkDuplicateEmail, _middlewares.verifySignup.checkRolesExisted], authController.signUp);
 var _default = router;
 exports["default"] = _default;

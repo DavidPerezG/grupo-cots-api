@@ -33,6 +33,9 @@ var userSchema = new _mongoose.Schema({
     type: String,
     required: true
   },
+  image: {
+    type: String
+  },
   roles: [{
     ref: "Role",
     type: _mongoose.Schema.Types.ObjectId

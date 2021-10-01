@@ -378,16 +378,17 @@ exports.findOneUser = findOneUser;
 
 var createUser = /*#__PURE__*/function () {
   var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(req, res) {
-    var _req$body, name, email, password, roles, newUser, foundRoles, rolePatient, savedUser;
+    var _req$body, name, email, password, image, roles, newUser, foundRoles, rolePatient, savedUser;
 
     return _regenerator["default"].wrap(function _callee6$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
-            _req$body = req.body, name = _req$body.name, email = _req$body.email, password = _req$body.password, roles = _req$body.roles;
+            console.log(req.file);
+            _req$body = req.body, name = _req$body.name, email = _req$body.email, password = _req$body.password, image = _req$body.image, roles = _req$body.roles;
 
             if (!(!name || !email || !password)) {
-              _context6.next = 3;
+              _context6.next = 4;
               break;
             }
 
@@ -395,76 +396,79 @@ var createUser = /*#__PURE__*/function () {
               message: 'User must have a name, email and password'
             }));
 
-          case 3:
-            _context6.prev = 3;
+          case 4:
+            _context6.prev = 4;
             _context6.t0 = _Users["default"];
             _context6.t1 = name;
             _context6.t2 = email;
-            _context6.next = 9;
+            _context6.next = 10;
             return _Users["default"].encryptPassword(password);
 
-          case 9:
+          case 10:
             _context6.t3 = _context6.sent;
-            _context6.t4 = {
+            _context6.t4 = image;
+            _context6.t5 = {
               name: _context6.t1,
               email: _context6.t2,
-              password: _context6.t3
+              password: _context6.t3,
+              image: _context6.t4
             };
-            newUser = new _context6.t0(_context6.t4);
+            newUser = new _context6.t0(_context6.t5);
 
             if (!roles) {
-              _context6.next = 19;
+              _context6.next = 21;
               break;
             }
 
-            _context6.next = 15;
+            _context6.next = 17;
             return _Role["default"].find({
               name: {
                 $in: roles
               }
             });
 
-          case 15:
+          case 17:
             foundRoles = _context6.sent;
             newUser.roles = foundRoles.map(function (role) {
               return role._id;
             });
-            _context6.next = 23;
+            _context6.next = 25;
             break;
 
-          case 19:
-            _context6.next = 21;
+          case 21:
+            _context6.next = 23;
             return _Role["default"].findOne({
               name: "user"
             });
 
-          case 21:
+          case 23:
             rolePatient = _context6.sent;
             newUser.roles = [rolePatient._id];
 
-          case 23:
-            _context6.next = 25;
+          case 25:
+            _context6.next = 27;
             return newUser.save();
 
-          case 25:
+          case 27:
             savedUser = _context6.sent;
             res.status(200).json({
-              message: "User created"
+              message: "User created",
+              iduser: savedUser._id
             });
-            _context6.next = 32;
+            _context6.next = 34;
             break;
 
-          case 29:
-            _context6.prev = 29;
-            _context6.t5 = _context6["catch"](3);
-            console.error(_context6.t5);
+          case 31:
+            _context6.prev = 31;
+            _context6.t6 = _context6["catch"](4);
+            console.error(_context6.t6);
 
-          case 32:
+          case 34:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6, null, [[3, 29]]);
+    }, _callee6, null, [[4, 31]]);
   }));
 
   return function createUser(_x11, _x12) {

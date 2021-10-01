@@ -14,7 +14,6 @@ export const findAllUsers = async (req, res) => {
         if(valueP != null){
             valueP = valueP.toLowerCase()
 
-
             var usersfiltered =  users.filter(user => user = user.name.toLowerCase().includes(valueP));
             res.json(usersfiltered) 
 
@@ -163,7 +162,7 @@ export const createUser = async (req, res) => {
     
         const savedUser = await newUser.save() 
 
-        res.status(200).json({message: "User created"})
+        res.status(200).json({message: "User created", iduser: savedUser._id})
 
 
     } catch (error) {

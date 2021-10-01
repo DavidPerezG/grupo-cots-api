@@ -5,7 +5,7 @@ const router =  Router();
 
 router.post('/signin',authController.signIn)
 router.post('/signup', [
-    verifySignup.checkDuplicateUsernameOrEmail, 
+    verifySignup.checkDuplicateEmail, 
     verifySignup.checkRolesExisted
 ], authController.signUp)
 

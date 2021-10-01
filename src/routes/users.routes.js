@@ -17,7 +17,7 @@ router.post('/', [
     authJwt.verifyToken, 
     authJwt.verifyAdmin, 
     verifySignup.checkRolesExisted,
-    verifySignup.checkDuplicateUsernameOrEmail
+    verifySignup.checkDuplicateEmail
 ], usersController.createUser)
 router.put('/:id', [authJwt.verifyToken], usersController.updateUser)
 router.delete('/:id', [authJwt.verifyToken], usersController.deleteUser)
