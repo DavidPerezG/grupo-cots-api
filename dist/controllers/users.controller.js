@@ -515,7 +515,8 @@ var updateUser = /*#__PURE__*/function () {
             _context7.prev = 11;
             _context7.t0 = _context7["catch"](0);
             res.status(500).json({
-              message: "Error updating user"
+              message: "Error updating user",
+              error: _context7.t0
             });
 
           case 14:
