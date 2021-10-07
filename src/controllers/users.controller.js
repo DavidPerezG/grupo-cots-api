@@ -1,8 +1,7 @@
 import UsersModel from "../models/Users.model";
 import RoleModel from "../models/Role.model";
 import { getPagination } from "../libs/getPagination";
-import { authJwt } from "../middlewares";
-import { verifyAdmin } from "../middlewares/authJwt";
+
 
 //Encuentra todos los usuarios registrados
 export const findAllUsers = async (req, res) => {
@@ -19,7 +18,7 @@ export const findAllUsers = async (req, res) => {
 
         }
         else if (size === undefined && page === undefined){
-            
+            users.reverse();
             res.json(users)
             
         }
@@ -28,7 +27,7 @@ export const findAllUsers = async (req, res) => {
             const {limit, offset} = getPagination(page, size);
 
             const users = await UsersModel.paginate({}, { offset, limit });
-            
+            users.reverse();
             res.json(users.docs)
         }
 
@@ -48,20 +47,23 @@ export const findAllAdmins = async (req, res) => {
     
         if (size === undefined && page === undefined){
             const users = await UsersModel.find({roles: roleDoctor._id})
+            users.reverse();
             res.json(users)
         }
         else{
             const {limit, offset} = getPagination(page, size);
 
             const users = await UsersModel.paginate({roles: roleDoctor._id}, { offset, limit });
-            
+            users.reverse();
             res.json(users)
         }
 
         
     } catch (error) {
+        console.log(error)
         res.status(500).json({
-            message: 'Error retrieving users'
+            message: 'Error retrieving users',
+            error: error
         })
     }
 }
@@ -98,13 +100,14 @@ export const findAllPatients = async (req, res) => {
     
         if (size === undefined && page === undefined){
             const users = await UsersModel.find({roles: roleDoctor._id})
+            users = users.reverse();
             res.json(users)
         }
         else{
             const {limit, offset} = getPagination(page, size);
 
             const users = await UsersModel.paginate({roles: roleDoctor._id}, { offset, limit });
-            
+            users = users.reverse();
             res.json(users)
         }
 
@@ -173,8 +176,11 @@ export const createUser = async (req, res) => {
 //Actualizar datos de un usuario
 export const updateUser = async (req, res) => {
     try {
-        if(req.body.password){
+        if(req.body.password && req.body.password != ""){
             req.body.password = await UsersModel.encryptPassword(req.body.password)
+        }
+        else{
+            delete req.body.password
         }
        
         const User = await UsersModel.findByIdAndUpdate(req.params.id, req.body)

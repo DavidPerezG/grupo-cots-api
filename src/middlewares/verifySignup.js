@@ -1,7 +1,16 @@
 import { ROLES } from '../models/Role.model'
 import UsersModel from '../models/Users.model'
+import CompaniesModel from '../models/Companies.model'
 
-export const checkDuplicateEmail = async (req, res, next) => {
+export const checkDuplicateEmailOfCompany = async (req, res, next) => {
+
+    const email = await CompaniesModel.findOne({email: req.body.email})
+    if(email) return res.status(400).json({message: 'The email already exists'})
+
+    next()
+}
+
+export const checkDuplicateEmailOfUser = async (req, res, next) => {
 
     const email = await UsersModel.findOne({email: req.body.email})
     if(email) return res.status(400).json({message: 'The email already exists'})

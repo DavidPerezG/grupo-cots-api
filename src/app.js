@@ -9,6 +9,7 @@ import path from 'path'
 import UsersRoutes from './routes/users.routes'
 import DoctorsRoutes from './routes/doctors.routes'
 import AuthRoutes from './routes/auth.routes'
+import CompaniesRoutes from './routes/companies.routes'
 
 import InitialSetup, { createRoles } from './libs/initialSetup'
 
@@ -50,6 +51,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', UsersRoutes)
 app.use('/api/doctors', DoctorsRoutes)
 app.use('/api/auth', AuthRoutes)
+app.use('/api/companies', CompaniesRoutes)
 
 
 export default app;
