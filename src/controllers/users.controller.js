@@ -27,7 +27,7 @@ export const findAllUsers = async (req, res) => {
             const {limit, offset} = getPagination(page, size);
 
             const users = await UsersModel.paginate({}, { offset, limit });
-            users.reverse();
+            users.docs.reverse();
             res.json(users.docs)
         }
 
@@ -43,6 +43,7 @@ export const findAllUsers = async (req, res) => {
 export const findAllAdmins = async (req, res) => {
     try {
         const { size, page } =  req.query
+        console.log(page)
         const roleDoctor = await RoleModel.findOne({name: 'admin'})
     
         if (size === undefined && page === undefined){
@@ -54,8 +55,8 @@ export const findAllAdmins = async (req, res) => {
             const {limit, offset} = getPagination(page, size);
 
             const users = await UsersModel.paginate({roles: roleDoctor._id}, { offset, limit });
-            users.reverse();
-            res.json(users)
+            users.docs.reverse();
+            res.json(users.docs)
         }
 
         
@@ -81,8 +82,8 @@ export const findAllDoctors = async (req, res) => {
             const {limit, offset} = getPagination(page, size);
 
             const users = await UsersModel.paginate({roles: roleDoctor._id}, { offset, limit });
-            
-            res.json(users)
+            users.docs.reverse();
+            res.json(users.docs)
         }
 
         
@@ -107,8 +108,8 @@ export const findAllPatients = async (req, res) => {
             const {limit, offset} = getPagination(page, size);
 
             const users = await UsersModel.paginate({roles: roleDoctor._id}, { offset, limit });
-            users = users.reverse();
-            res.json(users)
+            users.docs.reverse();
+            res.json(users.docs)
         }
 
         
