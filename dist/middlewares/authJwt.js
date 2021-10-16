@@ -78,7 +78,8 @@ var verifyToken = /*#__PURE__*/function () {
             _context.t0 = _context["catch"](0);
             console.log(_context.t0);
             return _context.abrupt("return", res.status(401).json({
-              message: "Unauthorized"
+              message: "Unauthorized",
+              error: _context.t0
             }));
 
           case 21:

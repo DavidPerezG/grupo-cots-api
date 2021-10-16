@@ -29,6 +29,8 @@ var _doctors = _interopRequireDefault(require("./routes/doctors.routes"));
 
 var _auth = _interopRequireDefault(require("./routes/auth.routes"));
 
+var _companies = _interopRequireDefault(require("./routes/companies.routes"));
+
 var _initialSetup = _interopRequireWildcard(require("./libs/initialSetup"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -76,5 +78,6 @@ app.get('/', function (req, res) {
 app.use('/api/users', _users["default"]);
 app.use('/api/doctors', _doctors["default"]);
 app.use('/api/auth', _auth["default"]);
+app.use('/api/companies', _companies["default"]);
 var _default = app;
 exports["default"] = _default;

@@ -9,6 +9,8 @@ exports.deleteUser = exports.updateUser = exports.createUser = exports.findOneUs
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _readOnlyError2 = _interopRequireDefault(require("@babel/runtime/helpers/readOnlyError"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _Users = _interopRequireDefault(require("../models/Users.model"));
@@ -16,10 +18,6 @@ var _Users = _interopRequireDefault(require("../models/Users.model"));
 var _Role = _interopRequireDefault(require("../models/Role.model"));
 
 var _getPagination5 = require("../libs/getPagination");
-
-var _middlewares = require("../middlewares");
-
-var _authJwt = require("../middlewares/authJwt");
 
 //Encuentra todos los usuarios registrados
 var findAllUsers = /*#__PURE__*/function () {
@@ -50,49 +48,53 @@ var findAllUsers = /*#__PURE__*/function () {
               return user = user.name.toLowerCase().includes(valueP);
             });
             res.json(usersfiltered);
-            _context.next = 22;
+            _context.next = 24;
             break;
 
           case 13:
             if (!(size === undefined && page === undefined)) {
-              _context.next = 17;
+              _context.next = 18;
               break;
             }
 
+            users.reverse();
             res.json(users);
-            _context.next = 22;
+            _context.next = 24;
             break;
 
-          case 17:
+          case 18:
             _getPagination = (0, _getPagination5.getPagination)(page, size), limit = _getPagination.limit, offset = _getPagination.offset;
-            _context.next = 20;
+            _context.next = 21;
             return _Users["default"].paginate({}, {
               offset: offset,
               limit: limit
             });
 
-          case 20:
+          case 21:
             _users = _context.sent;
+
+            _users.docs.reverse();
+
             res.json(_users.docs);
 
-          case 22:
-            _context.next = 28;
+          case 24:
+            _context.next = 30;
             break;
 
-          case 24:
-            _context.prev = 24;
+          case 26:
+            _context.prev = 26;
             _context.t0 = _context["catch"](0);
             console.log(_context.t0);
             res.status(500).json({
               message: 'Error retrieving users'
             });
 
-          case 28:
+          case 30:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 24]]);
+    }, _callee, null, [[0, 26]]);
   }));
 
   return function findAllUsers(_x, _x2) {
@@ -112,33 +114,35 @@ var findAllAdmins = /*#__PURE__*/function () {
           case 0:
             _context2.prev = 0;
             _req$query2 = req.query, size = _req$query2.size, page = _req$query2.page;
-            _context2.next = 4;
+            console.log(page);
+            _context2.next = 5;
             return _Role["default"].findOne({
               name: 'admin'
             });
 
-          case 4:
+          case 5:
             roleDoctor = _context2.sent;
 
             if (!(size === undefined && page === undefined)) {
-              _context2.next = 12;
+              _context2.next = 14;
               break;
             }
 
-            _context2.next = 8;
+            _context2.next = 9;
             return _Users["default"].find({
               roles: roleDoctor._id
             });
 
-          case 8:
+          case 9:
             users = _context2.sent;
+            users.reverse();
             res.json(users);
-            _context2.next = 17;
+            _context2.next = 20;
             break;
 
-          case 12:
+          case 14:
             _getPagination2 = (0, _getPagination5.getPagination)(page, size), limit = _getPagination2.limit, offset = _getPagination2.offset;
-            _context2.next = 15;
+            _context2.next = 17;
             return _Users["default"].paginate({
               roles: roleDoctor._id
             }, {
@@ -146,27 +150,32 @@ var findAllAdmins = /*#__PURE__*/function () {
               limit: limit
             });
 
-          case 15:
-            _users2 = _context2.sent;
-            res.json(_users2);
-
           case 17:
-            _context2.next = 22;
+            _users2 = _context2.sent;
+
+            _users2.docs.reverse();
+
+            res.json(_users2.docs);
+
+          case 20:
+            _context2.next = 26;
             break;
 
-          case 19:
-            _context2.prev = 19;
+          case 22:
+            _context2.prev = 22;
             _context2.t0 = _context2["catch"](0);
+            console.log(_context2.t0);
             res.status(500).json({
-              message: 'Error retrieving users'
+              message: 'Error retrieving users',
+              error: _context2.t0
             });
 
-          case 22:
+          case 26:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 19]]);
+    }, _callee2, null, [[0, 22]]);
   }));
 
   return function findAllAdmins(_x3, _x4) {
@@ -207,7 +216,7 @@ var findAllDoctors = /*#__PURE__*/function () {
           case 8:
             users = _context3.sent;
             res.json(users);
-            _context3.next = 17;
+            _context3.next = 18;
             break;
 
           case 12:
@@ -222,25 +231,28 @@ var findAllDoctors = /*#__PURE__*/function () {
 
           case 15:
             _users3 = _context3.sent;
-            res.json(_users3);
 
-          case 17:
-            _context3.next = 22;
+            _users3.docs.reverse();
+
+            res.json(_users3.docs);
+
+          case 18:
+            _context3.next = 23;
             break;
 
-          case 19:
-            _context3.prev = 19;
+          case 20:
+            _context3.prev = 20;
             _context3.t0 = _context3["catch"](0);
             res.status(500).json({
               message: 'Error retrieving users'
             });
 
-          case 22:
+          case 23:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[0, 19]]);
+    }, _callee3, null, [[0, 20]]);
   }));
 
   return function findAllDoctors(_x5, _x6) {
@@ -269,7 +281,7 @@ var findAllPatients = /*#__PURE__*/function () {
             roleDoctor = _context4.sent;
 
             if (!(size === undefined && page === undefined)) {
-              _context4.next = 12;
+              _context4.next = 13;
               break;
             }
 
@@ -280,13 +292,14 @@ var findAllPatients = /*#__PURE__*/function () {
 
           case 8:
             users = _context4.sent;
+            users.reverse(), (0, _readOnlyError2["default"])("users");
             res.json(users);
-            _context4.next = 17;
+            _context4.next = 19;
             break;
 
-          case 12:
+          case 13:
             _getPagination4 = (0, _getPagination5.getPagination)(page, size), limit = _getPagination4.limit, offset = _getPagination4.offset;
-            _context4.next = 15;
+            _context4.next = 16;
             return _Users["default"].paginate({
               roles: roleDoctor._id
             }, {
@@ -294,27 +307,30 @@ var findAllPatients = /*#__PURE__*/function () {
               limit: limit
             });
 
-          case 15:
+          case 16:
             _users4 = _context4.sent;
-            res.json(_users4);
 
-          case 17:
-            _context4.next = 22;
-            break;
+            _users4.docs.reverse();
+
+            res.json(_users4.docs);
 
           case 19:
-            _context4.prev = 19;
+            _context4.next = 24;
+            break;
+
+          case 21:
+            _context4.prev = 21;
             _context4.t0 = _context4["catch"](0);
             res.status(500).json({
               message: 'Error retrieving users'
             });
 
-          case 22:
+          case 24:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[0, 19]]);
+    }, _callee4, null, [[0, 21]]);
   }));
 
   return function findAllPatients(_x7, _x8) {
@@ -488,8 +504,8 @@ var updateUser = /*#__PURE__*/function () {
           case 0:
             _context7.prev = 0;
 
-            if (!req.body.password) {
-              _context7.next = 5;
+            if (!(req.body.password && req.body.password != "")) {
+              _context7.next = 7;
               break;
             }
 
@@ -498,33 +514,38 @@ var updateUser = /*#__PURE__*/function () {
 
           case 4:
             req.body.password = _context7.sent;
-
-          case 5:
-            _context7.next = 7;
-            return _Users["default"].findByIdAndUpdate(req.params.id, req.body);
+            _context7.next = 8;
+            break;
 
           case 7:
+            delete req.body.password;
+
+          case 8:
+            _context7.next = 10;
+            return _Users["default"].findByIdAndUpdate(req.params.id, req.body);
+
+          case 10:
             User = _context7.sent;
             res.json({
               message: "User updated"
             });
-            _context7.next = 14;
+            _context7.next = 17;
             break;
 
-          case 11:
-            _context7.prev = 11;
+          case 14:
+            _context7.prev = 14;
             _context7.t0 = _context7["catch"](0);
             res.status(500).json({
               message: "Error updating user",
               error: _context7.t0
             });
 
-          case 14:
+          case 17:
           case "end":
             return _context7.stop();
         }
       }
-    }, _callee7, null, [[0, 11]]);
+    }, _callee7, null, [[0, 14]]);
   }));
 
   return function updateUser(_x13, _x14) {

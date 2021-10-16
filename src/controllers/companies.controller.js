@@ -5,8 +5,29 @@ import UsersModel from "../models/Users.model";
 export const findAllCompanies = async (req, res) => {
     try {
         const companies = await CompaniesModel.find();
-        companies.reverse();
-        res.json(companies);
+        var params = new URLSearchParams(req.query);
+        var valueP = params.get('name');
+        const { size, page } =  req.query;
+        if(valueP != null){
+            valueP = valueP.toLowerCase()
+
+            var companiesfiltered =  companies.filter(company => company = company.name_company.toLowerCase().includes(valueP));
+            res.json(companiesfiltered.reverse()) 
+
+        }
+        else if (size === undefined && page === undefined){
+            res.json(companies.reverse())
+            
+        }
+        else{
+
+            const {limit, offset} = getPagination(page, size);
+
+            const companies = await CompaniesModel.paginate({}, { offset, limit });
+            companies.docs.reverse();
+            res.json(companies.docs)
+        }
+
 
     } catch (error) {
         console.log(error)
