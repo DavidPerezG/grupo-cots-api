@@ -94,10 +94,12 @@ export const createCompany = async (req, res) => {
 
 export const updateCompany = async (req, res) => {
     try {
-        if(req.body.password){
+        if(req.body.password && req.body.password != "" && req.body.password != null){
             req.body.password = await UsersModel.encryptPassword(req.body.password)
         }
-
+        else{
+            delete req.body.password
+        }
         const Company = await CompaniesModel.findByIdAndUpdate(req.params.id, req.body)
         res.json({
             message: "Company updated"

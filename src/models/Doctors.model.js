@@ -1,6 +1,11 @@
 import { Schema, model } from 'mongoose'
+import bcrypt from 'bcryptjs'
 
 const doctorSchema = new Schema({
+    id_company: {
+        type: Schema.Types.ObjectId,
+        
+    },
     name: { 
         type: String,
         required: true,
@@ -16,7 +21,11 @@ const doctorSchema = new Schema({
         type: String,
         required: true,
         trim: true
-    }
+    },
+    roles: {
+        ref: "Role",
+        type: Schema.Types.ObjectId,
+    },
 
 
 },{
@@ -25,4 +34,13 @@ const doctorSchema = new Schema({
 
 })
 
-export default model('Doctor', doctorSchema);
+doctorSchema.statics.encryptPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10)
+    return await bcrypt.hash(password, salt)
+}
+
+doctorSchema.statics.comparePassword = async (password, receivedPassword) => {
+    return await bcrypt.compare(password, receivedPassword)
+}
+
+export default model('Doctor', doctorSchema, 'users');

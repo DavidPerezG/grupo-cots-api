@@ -161,7 +161,7 @@ var signUp = /*#__PURE__*/function () {
 
           case 21:
             role = _context2.sent;
-            newUser.roles = [role._id];
+            newUser.roles = role._id;
 
           case 23:
             _context2.next = 25;

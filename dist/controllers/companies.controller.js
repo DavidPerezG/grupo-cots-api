@@ -17,7 +17,7 @@ var _Users = _interopRequireDefault(require("../models/Users.model"));
 
 var findAllCompanies = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
-    var companies, valueP, _req$query, size, page, companiesfiltered, _getPagination, limit, offset, _companies;
+    var companies, params, valueP, _req$query, size, page, companiesfiltered, _getPagination, limit, offset, _companies;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -25,15 +25,16 @@ var findAllCompanies = /*#__PURE__*/function () {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return _Companies["default"].find().reverse();
+            return _Companies["default"].find();
 
           case 3:
             companies = _context.sent;
+            params = new URLSearchParams(req.query);
             valueP = params.get('name');
             _req$query = req.query, size = _req$query.size, page = _req$query.page;
 
             if (!(valueP != null)) {
-              _context.next = 12;
+              _context.next = 13;
               break;
             }
 
@@ -41,41 +42,41 @@ var findAllCompanies = /*#__PURE__*/function () {
             companiesfiltered = companies.filter(function (company) {
               return company = company.name_company.toLowerCase().includes(valueP);
             });
-            res.json(companiesfiltered);
-            _context.next = 22;
+            res.json(companiesfiltered.reverse());
+            _context.next = 23;
             break;
 
-          case 12:
+          case 13:
             if (!(size === undefined && page === undefined)) {
-              _context.next = 16;
+              _context.next = 17;
               break;
             }
 
-            res.json(companies);
-            _context.next = 22;
+            res.json(companies.reverse());
+            _context.next = 23;
             break;
 
-          case 16:
+          case 17:
             _getPagination = getPagination(page, size), limit = _getPagination.limit, offset = _getPagination.offset;
-            _context.next = 19;
+            _context.next = 20;
             return _Companies["default"].paginate({}, {
               offset: offset,
               limit: limit
             });
 
-          case 19:
+          case 20:
             _companies = _context.sent;
 
             _companies.docs.reverse();
 
             res.json(_companies.docs);
 
-          case 22:
-            _context.next = 28;
+          case 23:
+            _context.next = 29;
             break;
 
-          case 24:
-            _context.prev = 24;
+          case 25:
+            _context.prev = 25;
             _context.t0 = _context["catch"](0);
             console.log(_context.t0);
             res.status(500).json({
@@ -83,12 +84,12 @@ var findAllCompanies = /*#__PURE__*/function () {
               error: _context.t0
             });
 
-          case 28:
+          case 29:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 24]]);
+    }, _callee, null, [[0, 25]]);
   }));
 
   return function findAllCompanies(_x, _x2) {
@@ -235,8 +236,8 @@ var updateCompany = /*#__PURE__*/function () {
           case 0:
             _context4.prev = 0;
 
-            if (!req.body.password) {
-              _context4.next = 5;
+            if (!(req.body.password && req.body.password != "" && req.body.password != null)) {
+              _context4.next = 7;
               break;
             }
 
@@ -245,33 +246,38 @@ var updateCompany = /*#__PURE__*/function () {
 
           case 4:
             req.body.password = _context4.sent;
-
-          case 5:
-            _context4.next = 7;
-            return _Companies["default"].findByIdAndUpdate(req.params.id, req.body);
+            _context4.next = 8;
+            break;
 
           case 7:
+            delete req.body.password;
+
+          case 8:
+            _context4.next = 10;
+            return _Companies["default"].findByIdAndUpdate(req.params.id, req.body);
+
+          case 10:
             Company = _context4.sent;
             res.json({
               message: "Company updated"
             });
-            _context4.next = 14;
+            _context4.next = 17;
             break;
 
-          case 11:
-            _context4.prev = 11;
+          case 14:
+            _context4.prev = 14;
             _context4.t0 = _context4["catch"](0);
             res.status(500).json({
               message: "Error updating company",
               error: _context4.t0
             });
 
-          case 14:
+          case 17:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[0, 11]]);
+    }, _callee4, null, [[0, 14]]);
   }));
 
   return function updateCompany(_x7, _x8) {

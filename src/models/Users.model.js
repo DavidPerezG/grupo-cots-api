@@ -23,10 +23,10 @@ const userSchema = new Schema(
         image: {
             type: String
         },
-        roles: [{
+        roles: {
             ref: "Role",
             type: Schema.Types.ObjectId,
-        }],
+        },
     },
     {
         versionKey: false,
@@ -44,5 +44,5 @@ userSchema.statics.comparePassword = async (password, receivedPassword) => {
 }
 
 userSchema.plugin(mongoosePaginate);
-export default model('User', userSchema)
+export default model('User', userSchema, 'users')
 

@@ -5,15 +5,17 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deleteUser = exports.updateUser = exports.createUser = exports.findOneUser = exports.findAllPatients = exports.findAllDoctors = exports.findAllAdmins = exports.findAllUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.createPatient = exports.createDoctor = exports.createAdmin = exports.findOneUser = exports.findAllPatients = exports.findAllDoctors = exports.findAllAdmins = exports.findAllUsers = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
-var _readOnlyError2 = _interopRequireDefault(require("@babel/runtime/helpers/readOnlyError"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _Users = _interopRequireDefault(require("../models/Users.model"));
+
+var _Doctors = _interopRequireDefault(require("../models/Doctors.model"));
+
+var _Patients = _interopRequireDefault(require("../models/Patients.model"));
 
 var _Role = _interopRequireDefault(require("../models/Role.model"));
 
@@ -204,7 +206,7 @@ var findAllDoctors = /*#__PURE__*/function () {
             roleDoctor = _context3.sent;
 
             if (!(size === undefined && page === undefined)) {
-              _context3.next = 12;
+              _context3.next = 13;
               break;
             }
 
@@ -215,13 +217,14 @@ var findAllDoctors = /*#__PURE__*/function () {
 
           case 8:
             users = _context3.sent;
+            users.reverse();
             res.json(users);
-            _context3.next = 18;
+            _context3.next = 19;
             break;
 
-          case 12:
+          case 13:
             _getPagination3 = (0, _getPagination5.getPagination)(page, size), limit = _getPagination3.limit, offset = _getPagination3.offset;
-            _context3.next = 15;
+            _context3.next = 16;
             return _Users["default"].paginate({
               roles: roleDoctor._id
             }, {
@@ -229,30 +232,30 @@ var findAllDoctors = /*#__PURE__*/function () {
               limit: limit
             });
 
-          case 15:
+          case 16:
             _users3 = _context3.sent;
 
             _users3.docs.reverse();
 
             res.json(_users3.docs);
 
-          case 18:
-            _context3.next = 23;
+          case 19:
+            _context3.next = 24;
             break;
 
-          case 20:
-            _context3.prev = 20;
+          case 21:
+            _context3.prev = 21;
             _context3.t0 = _context3["catch"](0);
             res.status(500).json({
               message: 'Error retrieving users'
             });
 
-          case 23:
+          case 24:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[0, 20]]);
+    }, _callee3, null, [[0, 21]]);
   }));
 
   return function findAllDoctors(_x5, _x6) {
@@ -264,7 +267,7 @@ exports.findAllDoctors = findAllDoctors;
 
 var findAllPatients = /*#__PURE__*/function () {
   var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(req, res) {
-    var _req$query4, size, page, roleDoctor, users, _getPagination4, limit, offset, _users4;
+    var _req$query4, size, page, rolePatient, users, _getPagination4, limit, offset, _users4;
 
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
@@ -278,7 +281,7 @@ var findAllPatients = /*#__PURE__*/function () {
             });
 
           case 4:
-            roleDoctor = _context4.sent;
+            rolePatient = _context4.sent;
 
             if (!(size === undefined && page === undefined)) {
               _context4.next = 13;
@@ -287,12 +290,12 @@ var findAllPatients = /*#__PURE__*/function () {
 
             _context4.next = 8;
             return _Users["default"].find({
-              roles: roleDoctor._id
+              roles: rolePatient._id
             });
 
           case 8:
             users = _context4.sent;
-            users.reverse(), (0, _readOnlyError2["default"])("users");
+            users.reverse();
             res.json(users);
             _context4.next = 19;
             break;
@@ -301,7 +304,7 @@ var findAllPatients = /*#__PURE__*/function () {
             _getPagination4 = (0, _getPagination5.getPagination)(page, size), limit = _getPagination4.limit, offset = _getPagination4.offset;
             _context4.next = 16;
             return _Users["default"].paginate({
-              roles: roleDoctor._id
+              roles: rolePatient._id
             }, {
               offset: offset,
               limit: limit
@@ -322,7 +325,8 @@ var findAllPatients = /*#__PURE__*/function () {
             _context4.prev = 21;
             _context4.t0 = _context4["catch"](0);
             res.status(500).json({
-              message: 'Error retrieving users'
+              message: 'Error retrieving users',
+              error: _context4.t0
             });
 
           case 24:
@@ -387,14 +391,14 @@ var findOneUser = /*#__PURE__*/function () {
   return function findOneUser(_x9, _x10) {
     return _ref5.apply(this, arguments);
   };
-}(); //Registra a un nuevo usuario
+}(); //Registra a un nuevo administrador
 
 
 exports.findOneUser = findOneUser;
 
-var createUser = /*#__PURE__*/function () {
+var createAdmin = /*#__PURE__*/function () {
   var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(req, res) {
-    var _req$body, name, email, password, image, roles, newUser, foundRoles, rolePatient, savedUser;
+    var _req$body, name, email, password, image, roles, newUser, foundRole, savedUser;
 
     return _regenerator["default"].wrap(function _callee6$(_context6) {
       while (1) {
@@ -403,24 +407,34 @@ var createUser = /*#__PURE__*/function () {
             console.log(req.file);
             _req$body = req.body, name = _req$body.name, email = _req$body.email, password = _req$body.password, image = _req$body.image, roles = _req$body.roles;
 
-            if (!(!name || !email || !password)) {
+            if (!(roles != 'admin')) {
               _context6.next = 4;
               break;
             }
 
             return _context6.abrupt("return", res.status(400).send({
-              message: 'User must have a name, email and password'
+              message: "Role '".concat(roles, "' does not correspond to creation of an admin")
             }));
 
           case 4:
-            _context6.prev = 4;
+            if (!(!name || !email || !password)) {
+              _context6.next = 6;
+              break;
+            }
+
+            return _context6.abrupt("return", res.status(400).send({
+              message: 'Admin must have a name, email and password'
+            }));
+
+          case 6:
+            _context6.prev = 6;
             _context6.t0 = _Users["default"];
             _context6.t1 = name;
             _context6.t2 = email;
-            _context6.next = 10;
+            _context6.next = 12;
             return _Users["default"].encryptPassword(password);
 
-          case 10:
+          case 12:
             _context6.t3 = _context6.sent;
             _context6.t4 = image;
             _context6.t5 = {
@@ -430,126 +444,276 @@ var createUser = /*#__PURE__*/function () {
               image: _context6.t4
             };
             newUser = new _context6.t0(_context6.t5);
-
-            if (!roles) {
-              _context6.next = 21;
-              break;
-            }
-
-            _context6.next = 17;
-            return _Role["default"].find({
+            _context6.next = 18;
+            return _Role["default"].findOne({
               name: {
                 $in: roles
               }
             });
 
-          case 17:
-            foundRoles = _context6.sent;
-            newUser.roles = foundRoles.map(function (role) {
-              return role._id;
-            });
-            _context6.next = 25;
-            break;
-
-          case 21:
-            _context6.next = 23;
-            return _Role["default"].findOne({
-              name: "user"
-            });
-
-          case 23:
-            rolePatient = _context6.sent;
-            newUser.roles = [rolePatient._id];
-
-          case 25:
-            _context6.next = 27;
+          case 18:
+            foundRole = _context6.sent;
+            newUser.roles = foundRole._id;
+            _context6.next = 22;
             return newUser.save();
 
-          case 27:
+          case 22:
             savedUser = _context6.sent;
             res.status(200).json({
-              message: "User created",
+              message: "Admin created",
               iduser: savedUser._id
             });
-            _context6.next = 34;
+            _context6.next = 29;
             break;
 
-          case 31:
-            _context6.prev = 31;
-            _context6.t6 = _context6["catch"](4);
+          case 26:
+            _context6.prev = 26;
+            _context6.t6 = _context6["catch"](6);
             console.error(_context6.t6);
 
-          case 34:
+          case 29:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6, null, [[4, 31]]);
+    }, _callee6, null, [[6, 26]]);
   }));
 
-  return function createUser(_x11, _x12) {
+  return function createAdmin(_x11, _x12) {
     return _ref6.apply(this, arguments);
   };
-}(); //Actualizar datos de un usuario
+}();
 
+exports.createAdmin = createAdmin;
 
-exports.createUser = createUser;
-
-var updateUser = /*#__PURE__*/function () {
+var createDoctor = /*#__PURE__*/function () {
   var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(req, res) {
-    var User;
+    var _req$body2, id_company, name, email, password, image, roles, newUser, foundRole, savedUser;
+
     return _regenerator["default"].wrap(function _callee7$(_context7) {
       while (1) {
         switch (_context7.prev = _context7.next) {
           case 0:
-            _context7.prev = 0;
+            console.log(req.file);
+            _req$body2 = req.body, id_company = _req$body2.id_company, name = _req$body2.name, email = _req$body2.email, password = _req$body2.password, image = _req$body2.image, roles = _req$body2.roles;
 
-            if (!(req.body.password && req.body.password != "")) {
-              _context7.next = 7;
+            if (!(roles != 'doctor')) {
+              _context7.next = 4;
               break;
             }
 
-            _context7.next = 4;
+            return _context7.abrupt("return", res.status(400).send({
+              message: "Role '".concat(roles, "' does not correspond to creation of a doctor")
+            }));
+
+          case 4:
+            if (!(!name || !email || !password)) {
+              _context7.next = 6;
+              break;
+            }
+
+            return _context7.abrupt("return", res.status(400).send({
+              message: 'Doctor must have a name, email and password'
+            }));
+
+          case 6:
+            _context7.prev = 6;
+            _context7.t0 = _Doctors["default"];
+            _context7.t1 = id_company;
+            _context7.t2 = name;
+            _context7.t3 = email;
+            _context7.next = 13;
+            return _Users["default"].encryptPassword(password);
+
+          case 13:
+            _context7.t4 = _context7.sent;
+            _context7.t5 = image;
+            _context7.t6 = {
+              id_company: _context7.t1,
+              name: _context7.t2,
+              email: _context7.t3,
+              password: _context7.t4,
+              image: _context7.t5
+            };
+            newUser = new _context7.t0(_context7.t6);
+            _context7.next = 19;
+            return _Role["default"].findOne({
+              name: {
+                $in: roles
+              }
+            });
+
+          case 19:
+            foundRole = _context7.sent;
+            newUser.roles = foundRole._id;
+            _context7.next = 23;
+            return newUser.save();
+
+          case 23:
+            savedUser = _context7.sent;
+            res.status(200).json({
+              message: "Doctor created",
+              iduser: savedUser._id
+            });
+            _context7.next = 30;
+            break;
+
+          case 27:
+            _context7.prev = 27;
+            _context7.t7 = _context7["catch"](6);
+            console.error(_context7.t7);
+
+          case 30:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7, null, [[6, 27]]);
+  }));
+
+  return function createDoctor(_x13, _x14) {
+    return _ref7.apply(this, arguments);
+  };
+}();
+
+exports.createDoctor = createDoctor;
+
+var createPatient = /*#__PURE__*/function () {
+  var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(req, res) {
+    var _req$body3, email, password, image, roles, newUser, foundRole, savedUser;
+
+    return _regenerator["default"].wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            console.log(req.file);
+            _req$body3 = req.body, email = _req$body3.email, password = _req$body3.password, image = _req$body3.image, roles = _req$body3.roles;
+
+            if (!(roles != 'patient')) {
+              _context8.next = 4;
+              break;
+            }
+
+            return _context8.abrupt("return", res.status(400).send({
+              message: "Role '".concat(roles, "' does not correspond to creation of a Patient")
+            }));
+
+          case 4:
+            if (!(!email || !password)) {
+              _context8.next = 6;
+              break;
+            }
+
+            return _context8.abrupt("return", res.status(400).send({
+              message: 'Patient must have an email and password'
+            }));
+
+          case 6:
+            _context8.prev = 6;
+            newUser = new _Patients["default"](req.body);
+            _context8.next = 10;
+            return _Role["default"].findOne({
+              name: {
+                $in: roles
+              }
+            });
+
+          case 10:
+            foundRole = _context8.sent;
+            newUser.roles = foundRole._id;
+            _context8.next = 14;
+            return _Patients["default"].encryptPassword(password);
+
+          case 14:
+            newUser.password = _context8.sent;
+            _context8.next = 17;
+            return newUser.save();
+
+          case 17:
+            savedUser = _context8.sent;
+            res.status(200).json({
+              message: "Patient created",
+              iduser: savedUser._id
+            });
+            _context8.next = 24;
+            break;
+
+          case 21:
+            _context8.prev = 21;
+            _context8.t0 = _context8["catch"](6);
+            console.error(_context8.t0);
+
+          case 24:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8, null, [[6, 21]]);
+  }));
+
+  return function createPatient(_x15, _x16) {
+    return _ref8.apply(this, arguments);
+  };
+}(); //Actualizar datos de un usuario
+
+
+exports.createPatient = createPatient;
+
+var updateUser = /*#__PURE__*/function () {
+  var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(req, res) {
+    var User;
+    return _regenerator["default"].wrap(function _callee9$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
+          case 0:
+            _context9.prev = 0;
+
+            if (!(req.body.password && req.body.password != "")) {
+              _context9.next = 7;
+              break;
+            }
+
+            _context9.next = 4;
             return _Users["default"].encryptPassword(req.body.password);
 
           case 4:
-            req.body.password = _context7.sent;
-            _context7.next = 8;
+            req.body.password = _context9.sent;
+            _context9.next = 8;
             break;
 
           case 7:
             delete req.body.password;
 
           case 8:
-            _context7.next = 10;
+            _context9.next = 10;
             return _Users["default"].findByIdAndUpdate(req.params.id, req.body);
 
           case 10:
-            User = _context7.sent;
+            User = _context9.sent;
             res.json({
               message: "User updated"
             });
-            _context7.next = 17;
+            _context9.next = 17;
             break;
 
           case 14:
-            _context7.prev = 14;
-            _context7.t0 = _context7["catch"](0);
+            _context9.prev = 14;
+            _context9.t0 = _context9["catch"](0);
             res.status(500).json({
               message: "Error updating user",
-              error: _context7.t0
+              error: _context9.t0
             });
 
           case 17:
           case "end":
-            return _context7.stop();
+            return _context9.stop();
         }
       }
-    }, _callee7, null, [[0, 14]]);
+    }, _callee9, null, [[0, 14]]);
   }));
 
-  return function updateUser(_x13, _x14) {
-    return _ref7.apply(this, arguments);
+  return function updateUser(_x17, _x18) {
+    return _ref9.apply(this, arguments);
   };
 }(); //Eliminar a un usuario por id
 
@@ -557,26 +721,26 @@ var updateUser = /*#__PURE__*/function () {
 exports.updateUser = updateUser;
 
 var deleteUser = /*#__PURE__*/function () {
-  var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(req, res) {
+  var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(req, res) {
     var id, User;
-    return _regenerator["default"].wrap(function _callee8$(_context8) {
+    return _regenerator["default"].wrap(function _callee10$(_context10) {
       while (1) {
-        switch (_context8.prev = _context8.next) {
+        switch (_context10.prev = _context10.next) {
           case 0:
-            _context8.prev = 0;
+            _context10.prev = 0;
             id = req.params.id;
-            _context8.next = 4;
+            _context10.next = 4;
             return _Users["default"].findByIdAndDelete(id);
 
           case 4:
-            User = _context8.sent;
+            User = _context10.sent;
 
             if (User) {
-              _context8.next = 7;
+              _context10.next = 7;
               break;
             }
 
-            return _context8.abrupt("return", res.status(400).send({
+            return _context10.abrupt("return", res.status(400).send({
               message: "User with ".concat(id, " doesn't exist")
             }));
 
@@ -584,26 +748,26 @@ var deleteUser = /*#__PURE__*/function () {
             res.json({
               message: "".concat(User.name, " with the id ").concat(id, " was deleted")
             });
-            _context8.next = 13;
+            _context10.next = 13;
             break;
 
           case 10:
-            _context8.prev = 10;
-            _context8.t0 = _context8["catch"](0);
+            _context10.prev = 10;
+            _context10.t0 = _context10["catch"](0);
             res.status(500).json({
               message: "Error deleting the user"
             });
 
           case 13:
           case "end":
-            return _context8.stop();
+            return _context10.stop();
         }
       }
-    }, _callee8, null, [[0, 10]]);
+    }, _callee10, null, [[0, 10]]);
   }));
 
-  return function deleteUser(_x15, _x16) {
-    return _ref8.apply(this, arguments);
+  return function deleteUser(_x19, _x20) {
+    return _ref10.apply(this, arguments);
   };
 }();
 

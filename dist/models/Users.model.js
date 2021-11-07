@@ -36,10 +36,10 @@ var userSchema = new _mongoose.Schema({
   image: {
     type: String
   },
-  roles: [{
+  roles: {
     ref: "Role",
     type: _mongoose.Schema.Types.ObjectId
-  }]
+  }
 }, {
   versionKey: false,
   timestamps: true
@@ -103,6 +103,6 @@ userSchema.statics.comparePassword = /*#__PURE__*/function () {
 
 userSchema.plugin(_mongoosePaginateV["default"]);
 
-var _default = (0, _mongoose.model)('User', userSchema);
+var _default = (0, _mongoose.model)('User', userSchema, 'users');
 
 exports["default"] = _default;

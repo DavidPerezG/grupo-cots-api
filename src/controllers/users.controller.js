@@ -1,4 +1,6 @@
 import UsersModel from "../models/Users.model";
+import DoctorsModel from "../models/Doctors.model";
+import PatientsModel from "../models/Patients.model";
 import RoleModel from "../models/Role.model";
 import { getPagination } from "../libs/getPagination";
 
@@ -35,7 +37,8 @@ export const findAllUsers = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            message: 'Error retrieving users'
+            message: 'Error retrieving users',
+            error: error
         })
     }
 }
@@ -76,6 +79,7 @@ export const findAllDoctors = async (req, res) => {
     
         if (size === undefined && page === undefined){
             const users = await UsersModel.find({roles: roleDoctor._id})
+            users.reverse()
             res.json(users)
         }
         else{
@@ -97,17 +101,17 @@ export const findAllDoctors = async (req, res) => {
 export const findAllPatients = async (req, res) => {
     try {
         const { size, page } =  req.query
-        const roleDoctor = await RoleModel.findOne({name: 'patient'})
+        const rolePatient = await RoleModel.findOne({name: 'patient'})
     
         if (size === undefined && page === undefined){
-            const users = await UsersModel.find({roles: roleDoctor._id})
-            users = users.reverse();
+            const users = await UsersModel.find({roles: rolePatient._id})
+            users.reverse();
             res.json(users)
         }
         else{
             const {limit, offset} = getPagination(page, size);
 
-            const users = await UsersModel.paginate({roles: roleDoctor._id}, { offset, limit });
+            const users = await UsersModel.paginate({roles: rolePatient._id}, { offset, limit });
             users.docs.reverse();
             res.json(users.docs)
         }
@@ -115,7 +119,8 @@ export const findAllPatients = async (req, res) => {
         
     } catch (error) {
         res.status(500).json({
-            message: 'Error retrieving users'
+            message: 'Error retrieving users',
+            error: error
         })
     }
 }
@@ -137,14 +142,20 @@ export const findOneUser = async (req, res) => {
     }
 }
 
-//Registra a un nuevo usuario
-export const createUser = async (req, res) => {
+//Registra a un nuevo administrador
+export const createAdmin = async (req, res) => {
     console.log(req.file)
     const { name, email ,password, image ,roles } = req.body
+
+    if(roles != 'admin'){
+        return res.status(400).send({
+            message: `Role '${roles}' does not correspond to creation of an admin`
+        })
+    } 
     
     if (!name || !email || !password){
         return res.status(400).send({
-            message: 'User must have a name, email and password'
+            message: 'Admin must have a name, email and password'
         })
     }
 
@@ -155,18 +166,80 @@ export const createUser = async (req, res) => {
             password: await UsersModel.encryptPassword(password),
             image
         })
-    
-        if (roles) {
-            const foundRoles = await RoleModel.find({name: {$in: roles}})
-            newUser.roles = foundRoles.map(role => role._id)
-        } else {
-            const rolePatient = await RoleModel.findOne({name: "user"})
-            newUser.roles = [rolePatient._id];
-        }
+        const foundRole = await RoleModel.findOne({name: {$in: roles}})
+        newUser.roles = foundRole._id;
+        const savedUser = await newUser.save() 
+
+        res.status(200).json({message: "Admin created", iduser: savedUser._id})
+
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const createDoctor = async (req, res) => {
+    console.log(req.file)
+    const { id_company, name, email ,password, image ,roles } = req.body
+
+    if(roles != 'doctor'){
+        return res.status(400).send({
+            message: `Role '${roles}' does not correspond to creation of a doctor`
+        })
+    }
+    if (!name || !email || !password){
+        return res.status(400).send({
+            message: 'Doctor must have a name, email and password'
+        })
+    }
+
+    try {
+        const newUser = new DoctorsModel({
+            id_company,
+            name, 
+            email,
+            password: await UsersModel.encryptPassword(password),
+            image
+        })
+
+        const foundRole = await RoleModel.findOne({name: {$in: roles}})
+        newUser.roles = foundRole._id;
     
         const savedUser = await newUser.save() 
 
-        res.status(200).json({message: "User created", iduser: savedUser._id})
+        res.status(200).json({message: "Doctor created", iduser: savedUser._id})
+
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const createPatient = async (req, res) => {
+    console.log(req.file)
+    const { email ,password, image ,roles } = req.body
+
+    if(roles != 'patient'){
+        return res.status(400).send({
+            message: `Role '${roles}' does not correspond to creation of a Patient`
+        })
+    }
+    if (!email || !password){
+        return res.status(400).send({
+            message: 'Patient must have an email and password'
+        })
+    }
+
+    try {
+        const newUser = new PatientsModel(req.body)
+        const foundRole = await RoleModel.findOne({name: {$in: roles}})
+        newUser.roles = foundRole._id;
+
+        newUser.password = await PatientsModel.encryptPassword(password)
+
+        const savedUser = await newUser.save() 
+
+        res.status(200).json({message: "Patient created", iduser: savedUser._id})
 
 
     } catch (error) {

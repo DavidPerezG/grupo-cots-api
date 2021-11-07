@@ -18,7 +18,20 @@ router.post('/', [
     authJwt.verifyAdmin, 
     verifySignup.checkRolesExisted,
     verifySignup.checkDuplicateEmailOfUser
-], usersController.createUser)
+], usersController.createAdmin)
+router.post('/doctors', [
+    authJwt.verifyToken, 
+    authJwt.verifyAdmin, 
+    verifySignup.checkRolesExisted,
+    verifySignup.checkDuplicateEmailOfUser
+], usersController.createDoctor)
+router.post('/patients', [
+    authJwt.verifyToken, 
+    authJwt.verifyAdmin, 
+    verifySignup.checkRolesExisted,
+    verifySignup.checkDuplicateEmailOfUser
+], usersController.createPatient)
+
 router.put('/:id', [authJwt.verifyToken], usersController.updateUser)
 router.delete('/:id', [authJwt.verifyToken], usersController.deleteUser)
 
