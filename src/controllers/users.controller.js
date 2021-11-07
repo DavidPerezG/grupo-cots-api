@@ -12,7 +12,7 @@ export const findAllUsers = async (req, res) => {
         var params = new URLSearchParams(req.query);
         var valueP = params.get('name');
         const { size, page } =  req.query;
-        if(valueP != null){
+        if(valueP != null && valueP != ""){
             valueP = valueP.toLowerCase()
 
             var usersfiltered =  users.filter(user => user = user.name.toLowerCase().includes(valueP));
