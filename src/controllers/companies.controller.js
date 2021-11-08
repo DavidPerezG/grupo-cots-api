@@ -8,7 +8,7 @@ export const findAllCompanies = async (req, res) => {
         var params = new URLSearchParams(req.query);
         var valueP = params.get('name');
         const { size, page } =  req.query;
-        if(valueP != null){
+        if(valueP != null && valueP != ""){
             valueP = valueP.toLowerCase()
 
             var companiesfiltered =  companies.filter(company => company = company.name_company.toLowerCase().includes(valueP));
