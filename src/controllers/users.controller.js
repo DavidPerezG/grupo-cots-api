@@ -14,8 +14,7 @@ export const findAllUsers = async (req, res) => {
         const { size, page } =  req.query;
         if(valueP != null && valueP != ""){
             valueP = valueP.toLowerCase()
-
-            var usersfiltered =  users.filter(user => user = user.name.toLowerCase().includes(valueP));
+            var usersfiltered = users.filter(user => user.name.toLowerCase().includes(valueP));
             res.json(usersfiltered) 
 
         }
@@ -45,15 +44,25 @@ export const findAllUsers = async (req, res) => {
 
 export const findAllAdmins = async (req, res) => {
     try {
+        const users = await UsersModel.find()
         const { size, page } =  req.query
+        var params = new URLSearchParams(req.query);
+        var valueP = params.get('name');
         console.log(page)
         const roleDoctor = await RoleModel.findOne({name: 'admin'})
     
-        if (size === undefined && page === undefined){
+        if(valueP != null && valueP != ""){
+            valueP = valueP.toLowerCase()
+            var usersfiltered = users.filter(user => user.name.toLowerCase().includes(valueP));
+            res.json(usersfiltered) 
+
+        }
+        else if (size === undefined && page === undefined){
             const users = await UsersModel.find({roles: roleDoctor._id})
             users.reverse();
             res.json(users)
         }
+        
         else{
             const {limit, offset} = getPagination(page, size);
 
