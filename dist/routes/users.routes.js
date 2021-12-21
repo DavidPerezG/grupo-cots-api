@@ -25,7 +25,11 @@ router.get('/patients', usersController.findAllPatients);
 router.get('/:id', usersController.findOneUser);
 router.post('/', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.verifyAdmin, _middlewares.verifySignup.checkRolesExisted, _middlewares.verifySignup.checkDuplicateEmailOfUser], usersController.createAdmin);
 router.post('/doctors', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.verifyAdmin, _middlewares.verifySignup.checkRolesExisted, _middlewares.verifySignup.checkDuplicateEmailOfUser], usersController.createDoctor);
-router.post('/patients', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.verifyAdmin, _middlewares.verifySignup.checkRolesExisted, _middlewares.verifySignup.checkDuplicateEmailOfUser], usersController.createPatient);
+router.post('/patients', [//authJwt.verifyToken, 
+  //authJwt.verifyAdmin, 
+  //verifySignup.checkRolesExisted,
+  //verifySignup.checkDuplicateEmailOfUser
+], usersController.createPatient);
 router.put('/:id', [_middlewares.authJwt.verifyToken], usersController.updateUser);
 router["delete"]('/:id', [_middlewares.authJwt.verifyToken], usersController.deleteUser);
 var _default = router;

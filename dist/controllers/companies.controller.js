@@ -33,7 +33,7 @@ var findAllCompanies = /*#__PURE__*/function () {
             valueP = params.get('name');
             _req$query = req.query, size = _req$query.size, page = _req$query.page;
 
-            if (!(valueP != null)) {
+            if (!(valueP != null && valueP != "")) {
               _context.next = 13;
               break;
             }

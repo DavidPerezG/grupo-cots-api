@@ -10,6 +10,8 @@ import UsersRoutes from './routes/users.routes'
 import PatientRoutes from './routes/patients.routes'
 import DoctorRoutes from './routes/doctors.routes'
 import AdminRoutes from './routes/admins.routes'
+import SecretaryRoutes from './routes/secretaries.routes'
+
 import AuthRoutes from './routes/auth.routes'
 import CompaniesRoutes from './routes/companies.routes'
 
@@ -54,6 +56,7 @@ app.use('/api/users', UsersRoutes)
 app.use('/api/users/patients', PatientRoutes)
 app.use('/api/users/doctors', DoctorRoutes)
 app.use('/api/users/admins', AdminRoutes)
+app.use('/api/users/secretaries', SecretaryRoutes)
 
 app.use('/api/auth', AuthRoutes)
 app.use('/api/companies', CompaniesRoutes)

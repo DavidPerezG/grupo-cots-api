@@ -7,7 +7,7 @@ exports["default"] = exports.ROLES = void 0;
 
 var _mongoose = require("mongoose");
 
-var ROLES = ["patient", "doctor", "admin"];
+var ROLES = ["patient", "doctor", "admin", "secretary"];
 exports.ROLES = ROLES;
 var roleSchema = new _mongoose.Schema({
   name: String

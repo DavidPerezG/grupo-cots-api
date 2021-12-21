@@ -15,97 +15,25 @@ var _mongoose = require("mongoose");
 
 var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
 
-_mongoose.Schema.Types.String.set('trim', true);
-
-var patientSchema = new _mongoose.Schema({
+var secretarySchema = new _mongoose.Schema({
   id_company: {
-    type: _mongoose.Schema.Types.ObjectId //required: true,
-
+    type: _mongoose.Schema.Types.ObjectId
   },
-  curp: {
+  name: {
     type: String,
-    maxlength: 18
-  },
-  rfc: {
-    type: String,
-    maxlength: 13
-  },
-  employee_photo: {
-    type: String
-  },
-  first_name: {
-    type: String
-  },
-  middle_name: {
-    type: String
-  },
-  paternal_surname: {
-    type: String
-  },
-  maternal_surname: {
-    type: String
-  },
-  marital_status: {
-    type: String
-  },
-  gender: {
-    type: String
-  },
-  date_birth: {
-    type: String
-  },
-  age: {
-    type: Number
-  },
-  place_birth: {
-    type: String
-  },
-  eye_color: {
-    type: String
-  },
-  hair_color: {
-    type: String
-  },
-  weight: {
-    type: Number
-  },
-  nationality: {
-    type: String
-  },
-  height: {
-    type: Number
-  },
-  religion: {
-    type: String
-  },
-  name_emergency: {
-    type: String
-  },
-  telephone_emergency: {
-    type: String
-  },
-  cellphone_emergency: {
-    type: String
-  },
-  address: {
-    type: String
+    required: true,
+    trim: true
   },
   email: {
     type: String,
-    required: true
-  },
-  donor: {
-    type: String
-  },
-  name_father: {
-    type: String
-  },
-  name_mother: {
-    type: String
+    required: true,
+    unique: true,
+    trim: true
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   roles: {
     ref: "Role",
@@ -116,7 +44,7 @@ var patientSchema = new _mongoose.Schema({
   timestamps: true
 });
 
-patientSchema.statics.encryptPassword = /*#__PURE__*/function () {
+secretarySchema.statics.encryptPassword = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(password) {
     var salt;
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -147,7 +75,7 @@ patientSchema.statics.encryptPassword = /*#__PURE__*/function () {
   };
 }();
 
-patientSchema.statics.comparePassword = /*#__PURE__*/function () {
+secretarySchema.statics.comparePassword = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(password, receivedPassword) {
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -172,6 +100,6 @@ patientSchema.statics.comparePassword = /*#__PURE__*/function () {
   };
 }();
 
-var _default = (0, _mongoose.model)('Patient', patientSchema, 'users');
+var _default = (0, _mongoose.model)('Secretary', secretarySchema, 'users');
 
 exports["default"] = _default;

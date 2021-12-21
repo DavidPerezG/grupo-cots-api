@@ -25,7 +25,13 @@ var _path = _interopRequireDefault(require("path"));
 
 var _users = _interopRequireDefault(require("./routes/users.routes"));
 
+var _patients = _interopRequireDefault(require("./routes/patients.routes"));
+
 var _doctors = _interopRequireDefault(require("./routes/doctors.routes"));
+
+var _admins = _interopRequireDefault(require("./routes/admins.routes"));
+
+var _secretaries = _interopRequireDefault(require("./routes/secretaries.routes"));
 
 var _auth = _interopRequireDefault(require("./routes/auth.routes"));
 
@@ -76,8 +82,12 @@ app.get('/', function (req, res) {
   });
 });
 app.use('/api/users', _users["default"]);
-app.use('/api/doctors', _doctors["default"]);
+app.use('/api/users/patients', _patients["default"]);
+app.use('/api/users/doctors', _doctors["default"]);
+app.use('/api/users/admins', _admins["default"]);
+app.use('/api/users/secretaries', _secretaries["default"]);
 app.use('/api/auth', _auth["default"]);
-app.use('/api/companies', _companies["default"]);
+app.use('/api/companies', _companies["default"]); //app.use('/api/doctors', DoctorsRoutes)
+
 var _default = app;
 exports["default"] = _default;

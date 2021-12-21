@@ -40,14 +40,14 @@ var findAllUsers = /*#__PURE__*/function () {
             valueP = params.get('name');
             _req$query = req.query, size = _req$query.size, page = _req$query.page;
 
-            if (!(valueP != null)) {
+            if (!(valueP != null && valueP != "")) {
               _context.next = 13;
               break;
             }
 
             valueP = valueP.toLowerCase();
             usersfiltered = users.filter(function (user) {
-              return user = user.name.toLowerCase().includes(valueP);
+              return user.name.toLowerCase().includes(valueP);
             });
             res.json(usersfiltered);
             _context.next = 24;
@@ -88,7 +88,8 @@ var findAllUsers = /*#__PURE__*/function () {
             _context.t0 = _context["catch"](0);
             console.log(_context.t0);
             res.status(500).json({
-              message: 'Error retrieving users'
+              message: 'Error retrieving users',
+              error: _context.t0
             });
 
           case 30:
@@ -108,43 +109,66 @@ exports.findAllUsers = findAllUsers;
 
 var findAllAdmins = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(req, res) {
-    var _req$query2, size, page, roleDoctor, users, _getPagination2, limit, offset, _users2;
+    var users, _req$query2, size, page, params, valueP, roleDoctor, usersfiltered, _users2, _getPagination2, limit, offset, _users3;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
+            _context2.next = 3;
+            return _Users["default"].find();
+
+          case 3:
+            users = _context2.sent;
             _req$query2 = req.query, size = _req$query2.size, page = _req$query2.page;
+            params = new URLSearchParams(req.query);
+            valueP = params.get('name');
             console.log(page);
-            _context2.next = 5;
+            _context2.next = 10;
             return _Role["default"].findOne({
               name: 'admin'
             });
 
-          case 5:
+          case 10:
             roleDoctor = _context2.sent;
 
-            if (!(size === undefined && page === undefined)) {
-              _context2.next = 14;
+            if (!(valueP != null && valueP != "")) {
+              _context2.next = 17;
               break;
             }
 
-            _context2.next = 9;
+            valueP = valueP.toLowerCase();
+            usersfiltered = users.filter(function (user) {
+              return user.name.toLowerCase().includes(valueP);
+            });
+            res.json(usersfiltered);
+            _context2.next = 31;
+            break;
+
+          case 17:
+            if (!(size === undefined && page === undefined)) {
+              _context2.next = 25;
+              break;
+            }
+
+            _context2.next = 20;
             return _Users["default"].find({
               roles: roleDoctor._id
             });
 
-          case 9:
-            users = _context2.sent;
-            users.reverse();
-            res.json(users);
-            _context2.next = 20;
+          case 20:
+            _users2 = _context2.sent;
+
+            _users2.reverse();
+
+            res.json(_users2);
+            _context2.next = 31;
             break;
 
-          case 14:
+          case 25:
             _getPagination2 = (0, _getPagination5.getPagination)(page, size), limit = _getPagination2.limit, offset = _getPagination2.offset;
-            _context2.next = 17;
+            _context2.next = 28;
             return _Users["default"].paginate({
               roles: roleDoctor._id
             }, {
@@ -152,19 +176,19 @@ var findAllAdmins = /*#__PURE__*/function () {
               limit: limit
             });
 
-          case 17:
-            _users2 = _context2.sent;
+          case 28:
+            _users3 = _context2.sent;
 
-            _users2.docs.reverse();
+            _users3.docs.reverse();
 
-            res.json(_users2.docs);
+            res.json(_users3.docs);
 
-          case 20:
-            _context2.next = 26;
+          case 31:
+            _context2.next = 37;
             break;
 
-          case 22:
-            _context2.prev = 22;
+          case 33:
+            _context2.prev = 33;
             _context2.t0 = _context2["catch"](0);
             console.log(_context2.t0);
             res.status(500).json({
@@ -172,12 +196,12 @@ var findAllAdmins = /*#__PURE__*/function () {
               error: _context2.t0
             });
 
-          case 26:
+          case 37:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 22]]);
+    }, _callee2, null, [[0, 33]]);
   }));
 
   return function findAllAdmins(_x3, _x4) {
@@ -189,7 +213,7 @@ exports.findAllAdmins = findAllAdmins;
 
 var findAllDoctors = /*#__PURE__*/function () {
   var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res) {
-    var _req$query3, size, page, roleDoctor, users, _getPagination3, limit, offset, _users3;
+    var _req$query3, size, page, roleDoctor, users, _getPagination3, limit, offset, _users4;
 
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
@@ -233,11 +257,11 @@ var findAllDoctors = /*#__PURE__*/function () {
             });
 
           case 16:
-            _users3 = _context3.sent;
+            _users4 = _context3.sent;
 
-            _users3.docs.reverse();
+            _users4.docs.reverse();
 
-            res.json(_users3.docs);
+            res.json(_users4.docs);
 
           case 19:
             _context3.next = 24;
@@ -267,7 +291,7 @@ exports.findAllDoctors = findAllDoctors;
 
 var findAllPatients = /*#__PURE__*/function () {
   var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(req, res) {
-    var _req$query4, size, page, rolePatient, users, _getPagination4, limit, offset, _users4;
+    var _req$query4, size, page, rolePatient, users, _getPagination4, limit, offset, _users5;
 
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
@@ -311,11 +335,11 @@ var findAllPatients = /*#__PURE__*/function () {
             });
 
           case 16:
-            _users4 = _context4.sent;
+            _users5 = _context4.sent;
 
-            _users4.docs.reverse();
+            _users5.docs.reverse();
 
-            res.json(_users4.docs);
+            res.json(_users5.docs);
 
           case 19:
             _context4.next = 24;
@@ -661,55 +685,109 @@ exports.createPatient = createPatient;
 
 var updateUser = /*#__PURE__*/function () {
   var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(req, res) {
-    var User;
+    var _req$body4, password, roles, Patient, Doctor, Admin;
+
     return _regenerator["default"].wrap(function _callee9$(_context9) {
       while (1) {
         switch (_context9.prev = _context9.next) {
           case 0:
             _context9.prev = 0;
+            //Check if there is password change
+            _req$body4 = req.body, password = _req$body4.password, roles = _req$body4.roles;
 
-            if (!(req.body.password && req.body.password != "")) {
-              _context9.next = 7;
+            if (!(password && password != "")) {
+              _context9.next = 8;
               break;
             }
 
-            _context9.next = 4;
+            _context9.next = 5;
             return _Users["default"].encryptPassword(req.body.password);
 
-          case 4:
+          case 5:
             req.body.password = _context9.sent;
-            _context9.next = 8;
+            _context9.next = 9;
             break;
-
-          case 7:
-            delete req.body.password;
 
           case 8:
-            _context9.next = 10;
-            return _Users["default"].findByIdAndUpdate(req.params.id, req.body);
+            delete req.body.password;
 
-          case 10:
-            User = _context9.sent;
-            res.json({
-              message: "User updated"
-            });
-            _context9.next = 17;
-            break;
+          case 9:
+            if (!(roles == 'patient')) {
+              _context9.next = 18;
+              break;
+            }
+
+            delete req.body.roles;
+            console.log(req.body);
+            _context9.next = 14;
+            return _Patients["default"].findByIdAndUpdate(req.params.id, req.body);
 
           case 14:
-            _context9.prev = 14;
+            Patient = _context9.sent;
+            res.json({
+              message: "Patient updated",
+              patient: Patient
+            });
+            _context9.next = 33;
+            break;
+
+          case 18:
+            if (!(roles == 'doctor')) {
+              _context9.next = 25;
+              break;
+            }
+
+            _context9.next = 21;
+            return _Doctors["default"].findByIdAndUpdate(req.params.id, req.body);
+
+          case 21:
+            Doctor = _context9.sent;
+            res.json({
+              message: "Doctor updated"
+            });
+            _context9.next = 33;
+            break;
+
+          case 25:
+            if (!(roles == 'admin')) {
+              _context9.next = 32;
+              break;
+            }
+
+            _context9.next = 28;
+            return _Users["default"].findByIdAndUpdate(req.params.id, req.body);
+
+          case 28:
+            Admin = _context9.sent;
+            res.json({
+              message: "Admin updated"
+            });
+            _context9.next = 33;
+            break;
+
+          case 32:
+            res.json({
+              message: "Rol ".concat(roles, " does not exist")
+            });
+
+          case 33:
+            _context9.next = 38;
+            break;
+
+          case 35:
+            _context9.prev = 35;
             _context9.t0 = _context9["catch"](0);
             res.status(500).json({
               message: "Error updating user",
               error: _context9.t0
             });
 
-          case 17:
+          case 38:
           case "end":
             return _context9.stop();
         }
       }
-    }, _callee9, null, [[0, 14]]);
+    }, _callee9, null, [[0, 35]]);
   }));
 
   return function updateUser(_x17, _x18) {
