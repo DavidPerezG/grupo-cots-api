@@ -6,9 +6,12 @@ import RoleModel from '../models/Role.model'
 export const signIn = async (req, res) => {
     
     try {
-        const userFound = await UserModel.findOne({email: req.body.email}).populate("roles")
 
-        if(!userFound) return res.status(400).json({message: "User not found"})
+
+        const userFound = await UserModel.findOne({email: req.body.email}).populate("roles")
+        console.log(userFound);
+
+        if(!userFound || userFound.roles.name != 'admin') return res.status(400).json({message: "User not found"})
 
         const match = await UserModel.comparePassword(req.body.password, userFound.password)
 
@@ -29,6 +32,36 @@ export const signIn = async (req, res) => {
     }
 
 }
+
+export const signInPatient = async (req, res) => {
+    try {
+        const userFound = await UserModel.findOne({email: req.body.email}).populate("roles")
+        console.log(userFound);
+
+        if(!userFound || userFound.roles.name != 'patient') return res.status(400).json({message: "User not found"})
+
+        const match = await UserModel.comparePassword(req.body.password, userFound.password)
+
+        if (!match) return res.status(401).json({token: null, message: "Invalid Password"})
+
+        const token = jwt.sign({id: userFound._id}, config.SECRET, {
+            expiresIn: 84600 //24 horas
+        })
+
+        res.status(200).json({
+            token: token,
+            iduser: userFound._id,
+            idcompany: 'waiting'  
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error signin in'
+        })
+    }
+
+}
+
+
 
 export const signUp = async (req, res) => {
     try {

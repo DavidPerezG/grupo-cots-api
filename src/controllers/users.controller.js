@@ -259,17 +259,43 @@ export const createPatient = async (req, res) => {
 //Actualizar datos de un usuario
 export const updateUser = async (req, res) => {
     try {
-        if(req.body.password && req.body.password != ""){
+        //Check if there is password change
+        const { password, roles } = req.body
+        if(password && password != ""){
             req.body.password = await UsersModel.encryptPassword(req.body.password)
         }
         else{
             delete req.body.password
         }
-       
-        const User = await UsersModel.findByIdAndUpdate(req.params.id, req.body)
-        res.json({
-            message: "User updated"
-        })
+
+        //check Rol and update
+        if(roles == 'patient'){
+            delete req.body.roles;
+            console.log(req.body);
+            
+            const Patient = await PatientsModel.findByIdAndUpdate(req.params.id, req.body);
+            res.json({
+                message: "Patient updated",
+                patient: Patient
+            })
+        } 
+        else if(roles == 'doctor'){
+            const Doctor = await DoctorsModel.findByIdAndUpdate(req.params.id, req.body)
+            res.json({
+                message: "Doctor updated"
+            })
+        }
+        else if(roles == 'admin'){
+            const Admin = await UsersModel.findByIdAndUpdate(req.params.id, req.body)
+            res.json({
+                message: "Admin updated"
+            })
+        }
+        else{
+            res.json({
+                message: `Rol ${roles} does not exist`
+            })
+        }
     } catch (error) {
         res.status(500).json({
             message: "Error updating user",
@@ -298,5 +324,5 @@ export const deleteUser = async (req, res) => {
             message:`Error deleting the user`
         })
         
-    }
+      }
 }

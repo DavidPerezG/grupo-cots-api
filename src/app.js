@@ -7,7 +7,9 @@ import multer from 'multer'
 import path from 'path'
 
 import UsersRoutes from './routes/users.routes'
-import DoctorsRoutes from './routes/doctors.routes'
+import PatientRoutes from './routes/patients.routes'
+import DoctorRoutes from './routes/doctors.routes'
+import AdminRoutes from './routes/admins.routes'
 import AuthRoutes from './routes/auth.routes'
 import CompaniesRoutes from './routes/companies.routes'
 
@@ -49,9 +51,12 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', UsersRoutes)
-app.use('/api/doctors', DoctorsRoutes)
+app.use('/api/patients', PatientRoutes)
+app.use('/api/doctors', DoctorRoutes)
+app.use('/api/admins', AdminRoutes)
 app.use('/api/auth', AuthRoutes)
 app.use('/api/companies', CompaniesRoutes)
+//app.use('/api/doctors', DoctorsRoutes)
 
 
 export default app;

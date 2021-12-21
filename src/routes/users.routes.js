@@ -26,10 +26,10 @@ router.post('/doctors', [
     verifySignup.checkDuplicateEmailOfUser
 ], usersController.createDoctor)
 router.post('/patients', [
-    authJwt.verifyToken, 
-    authJwt.verifyAdmin, 
-    verifySignup.checkRolesExisted,
-    verifySignup.checkDuplicateEmailOfUser
+    //authJwt.verifyToken, 
+    //authJwt.verifyAdmin, 
+    //verifySignup.checkRolesExisted,
+    //verifySignup.checkDuplicateEmailOfUser
 ], usersController.createPatient)
 
 router.put('/:id', [authJwt.verifyToken], usersController.updateUser)
