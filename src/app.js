@@ -51,9 +51,10 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', UsersRoutes)
-app.use('/api/patients', PatientRoutes)
-app.use('/api/doctors', DoctorRoutes)
-app.use('/api/admins', AdminRoutes)
+app.use('/api/users/patients', PatientRoutes)
+app.use('/api/users/doctors', DoctorRoutes)
+app.use('/api/users/admins', AdminRoutes)
+
 app.use('/api/auth', AuthRoutes)
 app.use('/api/companies', CompaniesRoutes)
 //app.use('/api/doctors', DoctorsRoutes)
