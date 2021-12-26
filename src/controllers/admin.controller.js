@@ -24,12 +24,13 @@ export const findAllAdmins = async (req, res) => {
         //if size or page parameters are used, give the corresponding size or/and page
         else if(size != undefined || page != undefined){
             const { limit, offset } = getPagination(page, size);
-            const admins = await AdminsModel.paginate({}, {offset, limit});
+            const admins = await UsersModel.paginate({}, {offset, limit});
             admins.docs.reverse();
             res.json(admins.docs);
         }
         //else give all the patients
         else{
+            console.log(admins);
             admins.reverse();
             res.json(admins)
         }
@@ -46,7 +47,7 @@ export const findAllAdmins = async (req, res) => {
 export const findOneAdmin = async (req, res) => {
     try {
         const { id } = req.params;
-        const admin = await AAminsModel.findById(id)
+        const admin = await UsersModel.findById(id)
 
         if(!admin){
             return res.status(404).json({message: `Admin with id ${id} does not exist`})
@@ -76,12 +77,12 @@ export const createAdmin = async (req, res) => {
     }
 
     try{
-        const newAdmin = new AdminsModel(req.body)
+        const newAdmin = new UsersModel(req.body)
         const adminRole = await RoleModel.findOne({name: roles})
         newAdmin.roles = adminRole._id;
-        newAdmin.password = await AdminsModel.encryptPassword(password)
+        newAdmin.password = await UsersModel.encryptPassword(password)
 
-        const savedAdmin = await newadmin.save()
+        const savedAdmin = await newAdmin.save()
 
         res.status(200).json({
             message: 'admin created', 
@@ -98,21 +99,20 @@ export const createAdmin = async (req, res) => {
 
 export const updateAdmin = async (req, res) => {
     try{
-        const { password, roles } = req.body;
+        console.log("flag")
+        console.log(req.params.id)
+        const { password, roles} = req.body;
         if(password && password != ""){
-            req.body.password = await AdminsModel.encryptPassword(req.body.password)
+            req.body.password = await UsersModel.encryptPassword(req.body.password)
         }
         else{
             delete req.body.password
         }
-        if(roles != 'admin'){
-            res.json({
-                message: 'This user does not have admin as role'
-            })
-        }
+        
         delete req.body.roles;
-
-        const adminUpdated = await AdminsModel.findByIdAndUpdate(req.params.id, req.body)
+        console.log(req.body)
+        const adminUpdated = await UsersModel.findByIdAndUpdate(req.params.id, req.body)
+        console.log(adminUpdated)
         res.json({
             message: "admin updated",
             admin: adminUpdated
@@ -128,7 +128,7 @@ export const updateAdmin = async (req, res) => {
 export const deleteAdmin = async (req, res) => {
     try {
         const { id } = req.params
-        const admin = await AdminsModel.findByIdAndDelete(id)
+        const admin = await UsersModel.findByIdAndDelete(id)
 
         if(!admin){
             return res.status(400).send({
@@ -141,7 +141,8 @@ export const deleteAdmin = async (req, res) => {
         })
     } catch (error) {
         res.status(500).json({
-            message:`Error deleting the admin`
+            message:`Error deleting the admin`,
+            error: error
         })
         
       }

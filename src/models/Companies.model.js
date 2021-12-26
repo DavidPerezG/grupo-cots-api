@@ -14,12 +14,10 @@ const companySchema = new Schema(
             required: true,
             unique: true,
             trim: true,
-
         },
         password: {
             type: String,
             required: true,
-
         },
         address: {
             type: String,
@@ -28,9 +26,12 @@ const companySchema = new Schema(
         image: {
             type: String
         },
-        
         phone_number: {
             type: String
+        },
+        roles: {
+            ref: "Role",
+            type: Schema.Types.ObjectId,
         },
         
     },

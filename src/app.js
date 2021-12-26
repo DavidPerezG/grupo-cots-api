@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
         message: "Bienvenido a la aplicacion" })
 })
 
-app.use('/api/users', UsersRoutes)
+//app.use('/api/users', UsersRoutes)
 app.use('/api/users/patients', PatientRoutes)
 app.use('/api/users/doctors', DoctorRoutes)
 app.use('/api/users/admins', AdminRoutes)

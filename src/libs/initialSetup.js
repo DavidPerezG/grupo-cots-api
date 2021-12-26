@@ -3,11 +3,11 @@ import RoleModel from '../models/Role.model'
 export const createRoles = async () => {
 
     //This const defines all the different roles
-    const roles = ['patient', 'doctor', 'admin', 'secretary']
+    const roles = ['patient', 'doctor', 'admin', 'secretary', 'company']
 
     try {
         const count = await RoleModel.estimatedDocumentCount()
-        if (count == 4) return;
+        if (count == roles.length) return;
 
         for (var i = 0; i < roles.length; i++){
             var role = await RoleModel.find({name: roles[i]})
@@ -28,9 +28,6 @@ export const createRoles = async () => {
         //     new RoleModel({name: 'secretary'}).save(),
         // ]
 
-        console.log({
-            values
-        })
 
     } catch (error) {
         console.error(error);

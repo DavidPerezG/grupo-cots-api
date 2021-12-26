@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import config from '../config'
 import UsersModel from '../models/Users.model'
 import RoleModel from '../models/Role.model'
+import CompaniesModel from '../models/Companies.model'
 
 export const verifyToken = async (req, res, next) => {
     try {
@@ -17,8 +18,12 @@ export const verifyToken = async (req, res, next) => {
         const decoded = jwt.verify(token, config.SECRET)
         req.userId = decoded.id;
 
-        const user = await UsersModel.findById(req.userId, {password: 0})
-        if (!user) return res.status(404).json({message: "No user found"})
+        var user = await UsersModel.findById(req.userId, {password: 0})
+        if (!user) {
+            user = await CompaniesModel.findById(req.userId, {password: 0});
+            if(!user) return res.status(404).json({message: "No user found"});
+        }
+        
 
         next()
 
@@ -63,7 +68,5 @@ export const verifyAdmin = async (req, res, next) => {
     }
 
     return res.status(403).json({message: "Request admin Role"});
-
-
 
 }

@@ -9,6 +9,7 @@ router.post('/signup', [
     verifySignup.checkDuplicateEmailOfUser, 
     verifySignup.checkRolesExisted
 ], authController.signUp)
+router.put('/changepassword/:id', authController.changePassword)
 
 
 export default router;

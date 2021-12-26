@@ -26,8 +26,6 @@ const doctorSchema = new Schema({
         ref: "Role",
         type: Schema.Types.ObjectId,
     },
-
-
 },{
     versionKey: false,
     timestamps: true

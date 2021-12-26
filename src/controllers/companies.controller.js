@@ -1,4 +1,5 @@
 import CompaniesModel from "../models/Companies.model";
+import RoleModel from "../models/Role.model";
 import UsersModel from "../models/Users.model";
 
 
@@ -40,6 +41,7 @@ export const findAllCompanies = async (req, res) => {
 
 export const findOneCompany = async (req, res) => {
     try {
+        
         const { id } = req.params;
         const Company = await CompaniesModel.findById(id)
         if(!Company){
@@ -61,7 +63,8 @@ export const createCompany = async (req, res) => {
         password, 
         address, 
         image, 
-        phone_number 
+        phone_number,
+        roles
     } = req.body;
 
     if(!name_company || !email || !password || !address){
@@ -70,14 +73,19 @@ export const createCompany = async (req, res) => {
         })
     }
 
+
+
     try {
+        const role = await RoleModel.findOne({name: roles})
+
         const newCompany = new CompaniesModel({
             name_company, 
             email, 
             password: await CompaniesModel.encryptPassword(password),
             address, 
             image, 
-            phone_number 
+            phone_number,
+            roles: role._id
         })
 
         const savedCompany = await newCompany.save()
@@ -94,15 +102,20 @@ export const createCompany = async (req, res) => {
 
 export const updateCompany = async (req, res) => {
     try {
+        console.log('companies')
         if(req.body.password && req.body.password != "" && req.body.password != null){
-            req.body.password = await UsersModel.encryptPassword(req.body.password)
+            req.body.password = await CompaniesModel.encryptPassword(req.body.password)
         }
         else{
             delete req.body.password
         }
+        console.log(req.body)
+        console.log(req.params.id)
         const Company = await CompaniesModel.findByIdAndUpdate(req.params.id, req.body)
+        
         res.json({
-            message: "Company updated"
+            message: "Company updated",
+            company:Company
         })
     } catch (error) {
         res.status(500).json({
